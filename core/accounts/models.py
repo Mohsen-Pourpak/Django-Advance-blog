@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)   # True means user can login to Admin Panel
     is_active = models.BooleanField(default=True)
     # is_verified = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=50)
+    # first_name = models.CharField(max_length=50)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 
 class Profile(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     image = models.ImageField(null=True, blank=True)
