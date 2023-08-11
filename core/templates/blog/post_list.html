@@ -25,6 +25,7 @@
                     <a href="{% url 'blog:post-delete' pk=post.id %}">
                         <h4> Delete </h4>
                     </a>
+                    <small> {{post.author.first_name}} - {{post.author.last_name}} </small>
             </div><hr>
         {% endfor %}
         <div class="pagination">
