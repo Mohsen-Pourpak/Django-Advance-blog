@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin,)
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import HttpResponse, render, redirect, get_object_or_404
 from django.views.generic import (
     TemplateView, 
     RedirectView, 
@@ -13,6 +13,10 @@ from django.views.generic import (
     )
 from . models import Post
 from .forms import PostForm
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
 # Create your views here.
 # function base view to show template
 '''
@@ -99,3 +103,8 @@ class PostEditView(LoginRequiredMixin,UpdateView):
 class PostDeleteView(LoginRequiredMixin,DeleteView):
     model = Post
     success_url = '/blog/post/'
+
+
+@api_view()
+def api_post_list_view(request):
+    return Response("ok")

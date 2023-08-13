@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     # apps
     "accounts",
     "blog",
-    
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
