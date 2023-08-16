@@ -1,9 +1,13 @@
+from rest_framework import status, mixins
+from rest_framework.generics import (GenericAPIView, 
+                                     ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView,)  
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-
-from rest_framework import status
 from rest_framework.views import APIView
+
+from django.shortcuts import get_object_or_404
 
 from .serializers import PostSerializer
 from blog.models import Post
@@ -32,7 +36,7 @@ def PostList(request):
 """
 
 
-class PostList(APIView):
+'''class PostList(APIView):
     """
         getting a list of posts and creating a new post.
     """
@@ -55,7 +59,7 @@ class PostList(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
-
+'''
 
 """
 @api_view(["GET", "PUT", "DELETE"])
@@ -83,6 +87,34 @@ def PostDetail(request,pk):
             return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
 """
 
+class PostList(ListCreateAPIView):
+    """
+        getting a list of posts and creating a new post.
+    """
+    permission_classes = [#IsAuthenticated,
+                          IsAuthenticatedOrReadOnly
+                          ]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter()
+
+
+
+
+class PostDetail(#RetrieveAPIView,
+                 #RetrieveUpdateAPIView,
+                 RetrieveUpdateDestroyAPIView):
+    """
+    getting detail of posts and edit them.
+    """
+
+    permission_classes = [#IsAuthenticated,
+                          IsAuthenticatedOrReadOnly
+                          ]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+
+'''
 class PostDetail(APIView):
     """
     getting detail of posts and edit them.
@@ -94,7 +126,7 @@ class PostDetail(APIView):
     serializer_class = PostSerializer
 
     def get(self, request, pk):
-        """ retrieving th post data """
+        """ retrieving the post data """
         post = Post.objects.get(pk=pk, status=True)
         if request.method=="GET":
             try:
@@ -120,5 +152,5 @@ class PostDetail(APIView):
             post.delete()
             return Response({"detail": "ITEM REMOVED SUCCESSFULLY~!"}, status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
-            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
-        
+            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND) 
+'''  
