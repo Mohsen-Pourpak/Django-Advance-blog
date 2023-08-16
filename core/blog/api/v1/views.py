@@ -1,23 +1,29 @@
-from rest_framework import status, mixins
+from rest_framework import (status, 
+                            mixins, 
+                            viewsets,)
+
 from rest_framework.generics import (GenericAPIView, 
                                      ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView,)  
-from rest_framework.decorators import api_view, permission_classes
+                                     RetrieveUpdateDestroyAPIView,) 
+ 
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly,)
+
+from rest_framework.decorators import (api_view,
+                                       permission_classes,
+                                       action,)
+
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
 from django.shortcuts import get_object_or_404
 
-from .serializers import PostSerializer
-from blog.models import Post
-
-data = {
-    "id":1,
-    "title": "best practice"
-}
+from .serializers import PostSerializer, CategorySerializer
+from blog.models import Post, Category
 
 
+
+# Example for @api_view GET and POST.
 """
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -36,31 +42,7 @@ def PostList(request):
 """
 
 
-'''class PostList(APIView):
-    """
-        getting a list of posts and creating a new post.
-    """
-    permission_classes = [#IsAuthenticated,
-                          IsAuthenticatedOrReadOnly
-                          ]
-    serializer_class = PostSerializer
-
-    def get(self, request):
-        """ retrieve a list of posts. """
-        post = Post.objects.all()
-        serializer = PostSerializer(post, many=True)  # "many" is for making instance for showing to serializer
-        return Response(serializer.data)
-
-    def post(self,request):
-        """ creating a post by providing data."""
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
-'''
-
+# Example for @api_view GET, PUT and DELETE.
 """
 @api_view(["GET", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
@@ -87,7 +69,9 @@ def PostDetail(request,pk):
             return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
 """
 
-class PostList(ListCreateAPIView):
+
+# Example for GET and POST methods with APIView.
+'''class PostList(APIView):
     """
         getting a list of posts and creating a new post.
     """
@@ -95,25 +79,25 @@ class PostList(ListCreateAPIView):
                           IsAuthenticatedOrReadOnly
                           ]
     serializer_class = PostSerializer
-    queryset = Post.objects.filter()
+
+    def get(self, request):
+        """ retrieve a list of posts. """
+        post = Post.objects.all()
+        serializer = PostSerializer(post, many=True)  # "many" is for making instance for showing to serializer
+        return Response(serializer.data)
+
+    def post(self,request):
+        """ creating a post by providing data."""
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+'''
 
 
-
-
-class PostDetail(#RetrieveAPIView,
-                 #RetrieveUpdateAPIView,
-                 RetrieveUpdateDestroyAPIView):
-    """
-    getting detail of posts and edit them.
-    """
-
-    permission_classes = [#IsAuthenticated,
-                          IsAuthenticatedOrReadOnly
-                          ]
-    serializer_class = PostSerializer
-    queryset = Post.objects.all()
-
-
+# Example for getting detail of a post with APIView including GET, PUT and DELETE.
 '''
 class PostDetail(APIView):
     """
@@ -154,3 +138,60 @@ class PostDetail(APIView):
         except Post.DoesNotExist:
             return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND) 
 '''  
+
+
+# Example for getting a list of posts with the Generic APIViews and mixins.
+'''
+class PostList(ListCreateAPIView):
+    """
+        getting a list of posts and creating a new post.
+    """
+    permission_classes = [#IsAuthenticated,
+                          IsAuthenticatedOrReadOnly
+                          ]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter()
+
+'''
+
+
+# Example for getting details of a post with the Generic APIViews and mixins including all the methods.
+'''class PostDetail(#RetrieveAPIView,
+                 #RetrieveUpdateAPIView,
+                 RetrieveUpdateDestroyAPIView):
+    """
+    getting detail of posts and edit them.
+    """
+
+    permission_classes = [#IsAuthenticated,
+                          IsAuthenticatedOrReadOnly
+                          ]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+'''
+
+
+
+
+class PostModelViewSet(viewsets.ModelViewSet):
+    """
+        getting a list of posts and creating a new post.
+    """
+    permission_classes = [#IsAuthenticated,
+                          IsAuthenticatedOrReadOnly
+                          ]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+    # Extra actions for simple router instance.
+    '''    
+    @action(method=["get"], detail=False)
+    def get_ok(self, request):
+        return Response({"detail":"ok"})
+    '''
+
+
+class CategoryModletViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
