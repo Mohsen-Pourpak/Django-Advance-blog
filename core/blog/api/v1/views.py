@@ -15,9 +15,13 @@ from rest_framework.decorators import (api_view,
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
+from .paginations import DefaultPagination
+from .permissions import IsOwnerOrReadOnly
 from .serializers import PostSerializer, CategorySerializer
 from blog.models import Post, Category
 
@@ -178,10 +182,22 @@ class PostModelViewSet(viewsets.ModelViewSet):
         getting a list of posts and creating a new post.
     """
     permission_classes = [#IsAuthenticated,
-                          IsAuthenticatedOrReadOnly
-                          ]
+                          IsAuthenticatedOrReadOnly, 
+                          IsOwnerOrReadOnly
+                        ]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {
+                        'category':["exact", "in"],
+                        'author':["exact"],
+                        'status':["exact"]
+                    }
+    search_fields = ['title', 'content',]
+    ordering_fields = ['published_date']
+    pagination_class = DefaultPagination
+
+
 
     # Extra actions for simple router instance.
     '''    
