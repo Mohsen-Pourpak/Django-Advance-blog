@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from accounts.models import User
+from accounts.models import User, Profile
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(max_length=255, write_only=True)
@@ -75,3 +75,27 @@ class CustomTokenObtainSerializer(TokenObtainPairSerializer):
         validated_data['email'] = self.user.email
         validated_data['user id'] = self.user.id
         return validated_data
+    
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('new_password1'):
+            raise serializers.ValidationError({'detail': 'passwords does not match!'})
+        try:
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as err:
+            raise serializers.ValidationError({'new_password':list(err.messages)})
+        
+        return super().validate(attrs)
+    
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source='user.email', read_only=True)
+    class Meta:
+        model = Profile
+        fields = ('id', 'first_name', 'last_name','email', 'image', 'description')
