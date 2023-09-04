@@ -3,7 +3,8 @@ django==3.2.10
 python-decouple
 pillow
 djangorestframework
-
+coreapi
+djangorestframework-simplejwt
 
 # Third party modules
 drf-yasg[validation]
