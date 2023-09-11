@@ -14,6 +14,13 @@ urlpatterns = [
     path('token/login/', views.CustomObtainAuthToken.as_view(), name='token-login'),
     path('token/logout/', views.CustomDiscardAuthToken.as_view(), name='token-logout'),
 
+    path('test-email/', views.TestEmailSend.as_view(), name='test-email'),
+    
+    # activation
+    # path('activation/confirm/',),
+    # resend activation
+    # path('activation/resend/',)
+
     # change pass
     path('change-password/', views.ChangePasswordApiView.as_view(), name='change-password'),
 
