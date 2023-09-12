@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # Other Modules:
     'drf_yasg',
     'mail_templated',
-
+    'djoser',
 
     # apps
     "accounts",
