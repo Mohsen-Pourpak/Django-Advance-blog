@@ -1,5 +1,7 @@
 from django.core.mail import send_mail
 
+from mail_templated import EmailMessage
+
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -7,10 +9,13 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 from django.shortcuts import get_object_or_404
 
 from accounts.models import User, Profile
+from ..utils import EmailThread
 
 from .serializers import (RegistrationSerializer, 
                           CustomAuthTokenSerializer,
@@ -102,11 +107,17 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 class TestEmailSend(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
-        send_mail(
-            "Subject here",
-            "Here is the message.",
-            "from@example.com",
-            ["to@example.com"],
-            fail_silently=False,
-        )
+        # Getting User's email for activation.
+        self.email = "mohsentestuser@mohsen.com"
+        user_obj = get_object_or_404(User, email=self.email)
+        token = self.get_tokens_for_user(user_obj)
+
+        # MultiThreading Email sending Process.
+        email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'mohsen@mohsen.com', to=[self.email])
+        EmailThread(email_obj).start()
         return Response("email sent!")
+    
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
