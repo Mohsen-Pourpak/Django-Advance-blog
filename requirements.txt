@@ -16,3 +16,8 @@ django-filter
 
 # Email Third party modules
 django-mail-templated
+
+
+# formatting and testing modules
+black
+flake8

@@ -1,30 +1,22 @@
-from rest_framework import (status, 
-                            mixins, 
-                            viewsets,)
+from rest_framework import (
+    viewsets,
+)
 
-from rest_framework.generics import (GenericAPIView, 
-                                     ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView,) 
- 
-from rest_framework.permissions import (IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly,)
 
-from rest_framework.decorators import (api_view,
-                                       permission_classes,
-                                       action,)
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+)
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
+
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-from django.shortcuts import get_object_or_404
+
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .paginations import DefaultPagination
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PostSerializer, CategorySerializer
 from blog.models import Post, Category
-
 
 
 # Example for @api_view GET and POST.
@@ -141,7 +133,7 @@ class PostDetail(APIView):
             return Response({"detail": "ITEM REMOVED SUCCESSFULLY~!"}, status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
             return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND) 
-'''  
+'''
 
 
 # Example for getting a list of posts with the Generic APIViews and mixins.
@@ -175,36 +167,36 @@ class PostList(ListCreateAPIView):
 '''
 
 
-
-
 class PostModelViewSet(viewsets.ModelViewSet):
     """
-        getting a list of posts and creating a new post.
+    getting a list of posts and creating a new post.
     """
-    permission_classes = [#IsAuthenticated,
-                          IsAuthenticatedOrReadOnly, 
-                          IsOwnerOrReadOnly
-                        ]
+
+    permission_classes = [  # IsAuthenticated,
+        IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    ]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {
-                        'category':["exact", "in"],
-                        'author':["exact"],
-                        'status':["exact"]
-                    }
-    search_fields = ['title', 'content',]
-    ordering_fields = ['published_date']
+        "category": ["exact", "in"],
+        "author": ["exact"],
+        "status": ["exact"],
+    }
+    search_fields = [
+        "title",
+        "content",
+    ]
+    ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
 
-
-
     # Extra actions for simple router instance.
-    '''    
+    """    
     @action(method=["get"], detail=False)
     def get_ok(self, request):
         return Response({"detail":"ok"})
-    '''
+    """
 
 
 class CategoryModletViewSet(viewsets.ModelViewSet):
