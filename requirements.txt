@@ -5,6 +5,7 @@ pillow
 djangorestframework
 coreapi
 djangorestframework-simplejwt
+djoser
 
 # Third party modules
 drf-yasg[validation]
