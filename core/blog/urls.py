@@ -5,7 +5,7 @@ from . import views
 app_name = "blog"
 
 urlpatterns = [
-    path('',views.IndexView.as_view(), name="index"),
+    path("", views.IndexView.as_view(), name="index"),
     # path('cbv-index/', TemplateView.as_view(template_name="index.html", extra_context={"name": "ali"})),
     # path('cbv-index/',views.IndexView.as_view(), name="cbv-index"),
     # path('go-to-youtube/<int:pk>/', views.RedirectToYoutube.as_view(), name='redirect to youtube'),

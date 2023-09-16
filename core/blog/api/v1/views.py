@@ -49,7 +49,7 @@ def PostDetail(request,pk):
             serializer = PostSerializer(post)
             return Response(serializer.data)
         except Post.DoesNotExist:
-            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
+            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)
     elif request.method=="PUT":
         serializer = PostSerializer(post,data=request.data)
         if serializer.is_valid():
@@ -62,7 +62,7 @@ def PostDetail(request,pk):
             post.delete()
             return Response({"detail": "ITEM REMOVED SUCCESSFULLY~!"}, status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
-            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
+            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)
 """
 
 
@@ -113,8 +113,9 @@ class PostDetail(APIView):
                 serializer = self.serializer_class(post)
                 return Response(serializer.data)
             except Post.DoesNotExist:
-                return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)  
-            
+                return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+
     def put(self, request, pk):
         """ edit the exist data. """
         post = Post.objects.get(pk=pk, status=True)
@@ -124,15 +125,17 @@ class PostDetail(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
-        
+
+
     def delete(self, request, pk):
         """ delete the post object """
         post = Post.objects.get(pk=pk, status=True)
         try:
             post.delete()
             return Response({"detail": "ITEM REMOVED SUCCESSFULLY~!"}, status=status.HTTP_204_NO_CONTENT)
+
         except Post.DoesNotExist:
-            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND) 
+            return Response({"detail": "object does not exist"}, status=status.HTTP_404_NOT_FOUND)
 '''
 
 
@@ -191,12 +194,13 @@ class PostModelViewSet(viewsets.ModelViewSet):
     ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
 
-    # Extra actions for simple router instance.
-    """    
+
+# Extra actions for simple router instance.
+"""
     @action(method=["get"], detail=False)
     def get_ok(self, request):
         return Response({"detail":"ok"})
-    """
+"""
 
 
 class CategoryModletViewSet(viewsets.ModelViewSet):
