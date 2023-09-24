@@ -11,12 +11,8 @@ djoser
 drf-yasg[validation]
 markdown
 django-filter
-
-# Deployment modules
-
-
-# Email Third party modules
 django-mail-templated
+django-cors-headers
 
 
 # formatting and testing modules
