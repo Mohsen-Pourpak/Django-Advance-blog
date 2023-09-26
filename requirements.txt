@@ -15,6 +15,9 @@ django-mail-templated
 django-cors-headers
 
 
+# deployment modules
+gunicorn
+
 # formatting and testing modules
 black
 flake8
@@ -24,3 +27,6 @@ Faker
 
 # background processing and caching modules
 celery
+redis
+django-redis
+django-celery-beat

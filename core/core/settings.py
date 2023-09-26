@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    #'django_celery_beat',
     # REST Tools:
     "rest_framework",
     "rest_framework.authtoken",
@@ -213,3 +214,27 @@ EMAIL_HOST = "smtp4dev"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 25
+
+
+# celery configuration:
+CELERY_BROKER_URL = 'redis://redis:6379/1'
+
+""" CELERY_BEAT_SCHEDULE = {
+    'send_email': {
+        'task': 'accounts.tasks.sendEmail',
+        'schedule': 5
+    }
+} """
+
+
+# caching configurations:
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/2",
+        # "TIMEOUT": 100,   its default value is 300 seconds equal to 5 minutes.
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
